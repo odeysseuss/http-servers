@@ -2,12 +2,6 @@
 
 // --- Helper Functions ---
 
-void sigchld_handler() {
-    int saved_errno = errno;
-    while(waitpid(-1, NULL, WNOHANG) > 0);
-    errno = saved_errno;
-}
-
 void *get_in_addr(struct sockaddr *sa) {
     if (sa->sa_family == AF_INET) {
         return &(((struct sockaddr_in *)sa)->sin_addr);
@@ -179,7 +173,7 @@ int parse_http_request(const char *req, http_request *header) {
 
 // Server Core Functions
 
-int setup_server_socket() {
+int setup_server_socket(void) {
     struct addrinfo hints, *servinfo, *p;
     int sockfd, yes = 1;
 
@@ -263,21 +257,11 @@ void handle_client_data(int client_fd) {
     close(client_fd);
 }
 
-int main() {
+int main(void) {
     int sockfd = setup_server_socket();
     if (sockfd == -1) {
         fprintf(stderr, "Failed to start server\n");
         return 1;
-    }
-
-    // Set up signal handler
-    struct sigaction sa;
-    sa.sa_handler = sigchld_handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-        perror("sigaction");
-        exit(1);
     }
 
     // Get local IP address

@@ -1,22 +1,27 @@
-CC=gcc
-ICDIRS=-I
-OPT=-O1
-CFLAGS=-Wall -Wextra -g $(INCDIRS) $(OPT)
+cc=gcc
+cflags=-Wall -Wextra -pedantic $(incdirs) -g $(opt)
+opt=-O2
+incdirs=-Iinclude
+bindir=bin
 
-CFILES=src/server.c
-CFILES2=src/client.c
-BINARY=bin/server
-BINARY2=bin/client
+cfiles=src/server.c
+cfiles2=src/client.c
 
-all: $(BINARY)
+binary=$(bindir)/server
+binary2=$(bindir)/client
 
-$(BINARY):
-	$(CC) $(CFLAGS) $(CFILES) -o $@
-	$(CC) $(CFLAGS) $(CFILES2) -o $(BINARY2)
+all: $(binary)
+
+$(binary): $(bindir)
+	$(cc) $(cflags) $(cfiles) -o $@
+	$(cc) $(cflags) $(cfiles2) -o $(binary2)
 
 run:
-	$(BINARY)
+	$(binary)
+
+$(bindir):
+	mkdir -p $@
 
 clean:
-	rm -f $(BINARY)
-	rm -f $(BINARY2)
+	rm -f $(binary)
+	rm -f $(binary2)

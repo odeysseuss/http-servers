@@ -38,7 +38,6 @@ typedef struct {
     int header_count;
 } http_response;
 
-void sigchld_handler();
 void *get_in_addr(struct sockaddr *sa);
 int sendall(int fd, char *buf, int *len);
 void add_to_pfds(struct pollfd *pfds[], int newfd, int *fd_count, int *fd_size);
